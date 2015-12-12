@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+<head>
+	<title>Google Map Demo</title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8">
+	<link href="http://static.qyer.com/models/basic/css/base.css" rel="stylesheet" type="text/css" />
+	<script src="require.js" type="text/javascript"></script>
+	<script src="jquery-1.10.2.min.js" type="text/javascript"></script>
+	<script src="http://maps.google.cn/maps/api/js?libraries=geometry&sensor=false&key=AIzaSyDuVPF7CxcYsNQhLlwCbTMgThoUl0UQHhg" type="text/javascript"></script>
+	<style type="text/css">
+	.map-card{
+		width:227px;background-color:#f8faff;
+	}
+	.map-card .coverphoto{display: inline-block;width:227px;height:150px;}
+	.map-card table{border-collapse: collapse;width: 100%;height:40px;border:none;overflow: hidden;background-color: #fff;}
+	.map-card dt{font-size: 16px;text-align: center;color: #323232;height:46px;line-height: 46px;}
+	.map-card dl{padding:0px 20px 20px 20px;}
+	.map-card .yellow{padding-left:10px;color:#f26622;}
+	.map-card .rank{color:#959595; }
+	.map-card .rank img{vertical-align: -7px; margin-right:5px;width: 14px;height:18px;}
+	.map-card .detail{color:#636363;line-height:18px; height:36px;overflow: hidden; }
+	.map-card dl{border-bottom:#ececec solid 1px;background-color:#f8fbff;}
+	.map-card td{height:18px;line-height: 18px;vertical-align: middle; text-align: center;}
+	.map-card td a{color:#636363;display: block;position: relative;height:18px;line-height: 18px;}
+	.map-card td a:after{position: absolute;content:"";height:18px;background-color: #ececec;width:1px;right:-1px;top:0px;}
+	</style>
+	
+</head>
+<body>
+
+<style>
+#mapNav ul li{float:left; width:250px; text-indent:20px; margin-right:10px; margin-bottom:10px; border:1px solid #0073B6;}
+#mapNav h2{font-size:24px;}
+</style>
+
+<div style="width:800px; margin:0 auto; margin-top:50px;" id="mapNav">
+	<h2 style="text-align:center;"> Map Demo </h2>
+	<ul>
+		<li data-control="add"><a href="javascript:;" >添加标记</a></li>
+		<li data-control="change"><a href="javascript:;" >替换一个标记图标</a></li>
+		<li data-control="delete"><a href="javascript:;" >删除一个标记图标</a></li>
+		<li data-control="line"><a href="javascript:;" >画线</a></li>
+		<li data-control="polygon"><a href="javascript:;" >画面</a></li>
+		<li data-control="delline"><a href="javascript:;" >删除线</a></li>
+		<li data-control="addInfoWindow"><a href="javascript:;" >给标记增加默认弹出层</a></li>
+		<li data-control="addDiyInfoWindow"><a href="javascript:;" >给标记增加自定义弹出层</a></li>
+		<li data-control="addMap"><a href="javascript:;" >添加一个地图</a></li>
+
+
+	</ul>
+	<div id="map" style="width:800px; height:500px; border:1px solid #000; clear:both;"></div>
+	<div id="map1" style="width:800px; height:500px; border:1px solid #000; clear:both;"></div>
+	
+</div>
+
+
+<style>
+.lableMarker{text-indent:20px; width:100px; height:60px; background:#fff;}
+.lableMarker h2{background:#0073B6; color:#fff;}
+
+</style>
+
+
+
+<script>
+
+	requirejs(['gmap'],  function (mapUtils) {
+		mapUtils.init("map")
+		var pos1 = {
+			lat:"-8.409518",
+			lng:"115.188919"
+		},
+		pos2 = {
+			lat:"32.066666",
+			lng:"34.766666"
+		},
+		icon={
+			url:"http://static.qyer.com/images/plan2/p_2_2/map_ico.png",
+			size:{
+				w:27,
+				h:32
+			},
+			point:{
+				x:0,
+				y:0
+			}
+		},
+		icon2 = {
+			url:"http://static.qyer.com/images/plan/tem/plan_map_icon.png",
+			size:{
+				w:21,
+				h:31
+			},
+			point:{
+				x:0,
+				y:0
+			}
+		},
+		poslist = ["-8.409518,115.188919","32.066666,34.766666","19.075983,72.877655","-8.725478,115.177940","-8.650000,115.216667"],
+		polyopt = {
+			strokeColor: '#FF0000',
+		    strokeOpacity: 0.8,
+		    strokeWeight: 2,
+		    fillColor: '#FF0000',
+		    fillOpacity: 0.35
+		};
+
+		// mapUtils.setMap(gmap);
+
+
+		$("#mapNav").delegate("li","click",function(){
+			var control = $(this).attr("data-control");
+			switch(control){
+				case "add":
+				    mapUtils.addMarker($.extend(pos1,{
+				    	icon:icon
+				    }));
+				    mapUtils.addMarker($.extend(pos2,{
+				    	infoWindow:infoWindow
+				    }));
+				    break;
+				case "change":
+				    mapUtils.changeMarkerIcon(pos1,{
+				    	icon:icon2
+				    });
+					break;
+				case "delete":
+				    mapUtils.delMarker(pos1)
+					break;
+				case "line":
+					var pos = [pos1,pos2]
+					mapUtils.drawLine(pos,{
+						strokeColor:"#FF0000",
+						strokeOpacity: 0.5,
+						strokeWeight: 5
+					});
+					break;
+				case "delline":
+				    mapUtils.clearLine();
+				    break;
+				case "polygon":
+				    var poly = mapUtils.drawPolygon(poslist,polyopt),
+				    	infoWindow = mapUtils.createInfoWindow({
+							content:"asdasd",
+							title:"ddd"
+						});
+                        mapUtils.addEvent(poly,"mouseover",function(){
+                            var latlng = mapUtils.createLatLng({
+                                lat:"-8.409518",
+                                lng:"115.188919"
+                            })
+                            infoWindow.setPosition(latlng);
+                            infoWindow.open(mapUtils.map)
+                        });
+                        mapUtils.addEvent(poly,"mouseout",function(){
+                            infoWindow.close()
+                        });
+                            
+				    break;
+				case "addInfoWindow":
+					var marker = mapUtils.searchMarkerByPosition(pos1),
+						infoWindow = mapUtils.createInfoWindow({
+							content:"asdasd",
+							title:"ddd"
+						});
+					mapUtils.addEvent(marker,"click",function(){
+						infoWindow.open(mapUtils.map,marker);
+					})
+				    break;
+				case "addDiyInfoWindow":
+					var marker = mapUtils.searchMarkerByPosition(pos1),
+						infoWindow = mapUtils.createDiyInfoWindow({
+							content:'<div class="map-card">'+
+								'<p>'+
+									'<img class="coverphoto" src="http://static.qyer.com/models/project/place/images/tmp/focusphoto.jpg"/>'+
+								'</p>'+
+								'<dl>'+
+									'<dt class="fontYaHei">'+
+										'金门大桥'+
+									'</dt>'+
+									'<dd>'+
+										'<p class="rank">'+
+											'<img src="http://static.qyer.com/models/project/place/images/map/icon-rank.png"/>加州活动中排名<em class="yellow">第5位</em>'+
+										'</p>'+
+										'<p class="detail">'+
+											'不可错过：脆皮酱油虾，樱桃番茄、香蒜酱马苏里拉奶酪意式...'+
+										'</p>'+
+									'</dd>'+
+								'</dl>'+
+								'<table cellpadding="0" cellspacing="0" border="0" width="100%">'+
+									'<tr>'+
+										'<td>'+
+											'<a href="javascript:void(0)">景点详情</a>'+
+										'</td>'+
+										'<td>'+
+											'<a href="javascript:void(0)">查看周边</a>'+
+										'</td>'+
+										'<td>'+
+											'<a href="javascript:void(0)">加入行程</a>'+
+										'</td>'+
+									'</tr>'+
+								'</table>'+
+							'</div>'
+						});
+					mapUtils.addEvent(marker,"mouseover",function(){
+						infoWindow.open(mapUtils.map,marker);
+					})
+					mapUtils.addEvent(marker,"mouseout",function(){
+						infoWindow.close()
+					})
+				    break;
+                case "addMap":
+                    mapUtils.init("map1")
+                    break;
+			}
+		})
+
+	});
+// var data = {
+// 	"1|9492":{"lat":"-8.409518","lng":"115.188919","id":"9492","name":"巴厘岛"},
+// 	"1|9265":{"lat":"32.066666","lng":"34.766666","id":"9265","name":"特拉维夫"},
+// 	"1|9463":{"lat":"19.075983","lng":"72.877655","id":"9463","name":"孟买"},
+// 	"1|9508":{"lat":"-8.725478","lng":"115.177940","id":"9508","name":"库塔"},
+// 	"1|9498":{"lat":"-8.650000","lng":"115.216667","id":"9498","name":"登巴萨"}
+// };
+
+
+</script>
+
+
+
+</body>
+</html>

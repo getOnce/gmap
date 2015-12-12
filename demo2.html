@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	 <script src="http://ditu.google.cn/maps?file=api&amp;v=2&amp;key=abcdefg&sensor=true_or_false" type="text/javascript"></script>
+      <script type="text/javascript">
+          function initialize()
+         {
+             if (GBrowserIsCompatible())
+             {
+                 var map = new google.maps.Map(document.getElementById("map_canvas"));
+				map.setCenter(new GLatLng(39.9493, 116.3975), 13);
+			}
+		}
+</script>
+</head>
+<body>
+	<div id="map_canvas" style="height:300px;width:300px;"></div>
+	<script>
+	initialize();
+	</script>
+</body>
+</html>
