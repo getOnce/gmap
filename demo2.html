@@ -3,22 +3,121 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	 <script src="http://ditu.google.cn/maps?file=api&amp;v=2&amp;key=abcdefg&sensor=true_or_false" type="text/javascript"></script>
-      <script type="text/javascript">
-          function initialize()
-         {
-             if (GBrowserIsCompatible())
-             {
-                 var map = new google.maps.Map(document.getElementById("map_canvas"));
-				map.setCenter(new GLatLng(39.9493, 116.3975), 13);
-			}
-		}
-</script>
+	
+	 
+      
 </head>
 <body>
-	<div id="map_canvas" style="height:300px;width:300px;"></div>
-	<script>
-	initialize();
-	</script>
+	<div id="map_canvas" style="height:500px;width:500px;"></div>
+	<div>
+		<a href="http://www.w3schools.com/googleapi/google_maps_basic.asp">
+			http://www.w3schools.com/googleapi/google_maps_basic.asp
+		</a>
+	</div>
+	<h4>
+		创建坐标点:
+	</h4>
+	<p>
+		new google.maps.LatLng(curCoords.lat, curCoords.lng)
+	</p>
+	<h4>
+		设置中心点:
+	</h4>
+	<p>
+		map.setCenter(new google.maps.LatLng(commonData.lat,commonData.lng), commonData.zoom);
+	</p>
+	<h4>
+		根据传入的经纬度数组设置最优视图
+	</h4>
+	<p>
+		var mapBounds =new google.maps.LatLngBounds();
+		for(var i =0;i<latlngs.length;i++){
+				mapBounds.extend(new google.maps.LatLng(latlngs[i].lat,latlngs[i].lng))
+			}
+			this.map.fitBounds(mapBounds);
+	</p>
+	<h4>
+		设置zoom
+	</h4>
+	<p>
+		
+		this.map.setZoom(zoom);
+	</p>
+	<h4>
+		清除线
+	</h4>
+	<p>
+		line.setMap(null)
+	</p>
+	<h4>
+		清除点
+	</h4>
+	<p>
+		marker.setMap(null)
+	</p>
+	<h4>
+		创建点
+	</h4>
+	<p>
+		/*
+		 *@method 创建icon
+		 * @private
+		 * @param  {object} opt.icon   图片的参数
+		 * @param  {string} opt.icon.url   图片地址
+		 * @param  {object} opt.icon.point 点得参数 里面包含x,y 图片组件的横纵坐标
+		 * @param  {object} opt.icon.size  图片大小 里面包含w,h
+		 * @param  {object} icon对象 
+		 **/
+		getIcon:function(iconOpt){
+			var size  = new google.maps.Size(iconOpt.size.w,iconOpt.size.h),  //icon的尺寸
+				point = new google.maps.Point(iconOpt.point.x, iconOpt.point.y); //icon的显示位置,图片精灵
+			return new google.maps.MarkerImage(iconOpt.url, size, point);
+		},
+		
+		var marker,
+			latlng = this.createLatLng(opt),
+			markerOpt = {
+				position:latlng,
+				map:this.map
+			};
+			opt.icon&&$.extend(markerOpt,{
+				icon:this.getIcon(opt.icon)
+			});
+			marker = new google.maps.Marker(markerOpt);
+	</p>
+	<h4>
+		地图的事件
+	</h4>
+	<p>
+		google.maps.event.addListener(mapUtils.map,"dragend bounds_changed drag zoom_changed",function(){
+			var bounds = mapUtils.map.getBounds();
+			countryCity.pageNum = 1;
+			mapCtrol.isFitBounds = false;
+		    countryCity.coords.min_lat = bounds.getSouthWest().lat();
+		    countryCity.coords.min_lng = bounds.getSouthWest().lng();
+		    countryCity.coords.max_lat = bounds.getNorthEast().lat();
+		    countryCity.coords.max_lng = bounds.getNorthEast().lng();
+		})
+	</p>
+	<script type="text/javascript">
+		var commonData = {
+			lat:48.856613,
+			lng:2.352222,
+			zoom:9
+		}
+		
+		var GLatLng = null
+          function initialize()
+         {		
+         	GLatLng = google.maps.LatLng;
+            var map = new google.maps.Map(document.getElementById("map_canvas"),{
+			    center:new google.maps.LatLng(51.508742,-0.120850),
+			    zoom:5,
+			    mapTypeId:google.maps.MapTypeId.ROADMAP
+			});
+			map.setCenter(new GLatLng(commonData.lat,commonData.lng), commonData.zoom);
+		}
+</script>
+<script src="http://maps.google.cn/maps/api/js?libraries=geometry&sensor=false&key=AIzaSyDuVPF7CxcYsNQhLlwCbTMgThoUl0UQHhg&callback=initialize" type="text/javascript"></script>
 </body>
 </html>
