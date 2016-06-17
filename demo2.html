@@ -99,7 +99,17 @@
 		    countryCity.coords.max_lng = bounds.getNorthEast().lng();
 		})
 	</p>
+	<p>
+		lat: <input type="text" value="48.856613" id="lat"><br/>
+		lng: <input type="text" value="2.352222" id="lng"><br/>
+		dlat: <input type="text" value="51.508742" id="dlat"><br/>
+		dlng: <input type="text" value="0.120850" id="dlng"><br/>
+		<input type="button" value="clickme" id="clickme">
+	</p>
 	<script type="text/javascript">
+		function $(id){
+			return document.getElementById(id);
+		}
 		var commonData = {
 			lat:48.856613,
 			lng:2.352222,
@@ -116,7 +126,41 @@
 			    mapTypeId:google.maps.MapTypeId.ROADMAP
 			});
 			map.setCenter(new GLatLng(commonData.lat,commonData.lng), commonData.zoom);
+
+
+			var directionsDisplay = new google.maps.DirectionsRenderer({
+		       map: map
+		    })
+		    , directionsService = new google.maps.DirectionsService;
+		    function getRoute(){
+		    	directionsService.route({
+			    	origin:new google.maps.LatLng($("lat").value,$("lng").value),
+			    	destination:new google.maps.LatLng($("dlat").value,$("dlng").value),
+			    	travelMode: google.maps.TravelMode.TRANSIT
+			    },function(response,status){
+			    	console.log('--------------');
+			    	console.log(response);
+			    	console.log(status);
+			    });
+
+			    directionsService.route({
+			    	origin:new google.maps.LatLng($("lat").value,$("lng").value),
+			    	destination:new google.maps.LatLng($("dlat").value,$("dlng").value),
+			    	travelMode: google.maps.TravelMode.TRANSIT
+			    },function(response,status){
+			    	console.log('-------');
+			    	console.log(response);
+			    	console.log(status);
+			    	console.log('＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝');
+			    });
+		    }
+		    document.getElementById("clickme").addEventListener("click",function(){
+		    	getRoute();
+		    },false);
 		}
+
+
+	
 </script>
 <script src="http://maps.google.cn/maps/api/js?libraries=geometry&sensor=false&key=AIzaSyDuVPF7CxcYsNQhLlwCbTMgThoUl0UQHhg&callback=initialize" type="text/javascript"></script>
 </body>

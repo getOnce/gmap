@@ -1,7 +1,7 @@
 /**
  * google map 工具类
  * @static
- * @author zhuwenxuan
+ * @author liujianchuan
  * @date   2014.10.16   
  */
 define(["infobox"], function(InfoBox){
@@ -13,7 +13,7 @@ define(["infobox"], function(InfoBox){
 		 * @param  {object} opt   地图属性
 		 */
 		map:null,
-		init:function(containerid,opt){
+		init:function(containerid, opt){
 			var me = this;
 			if(window["google"]&&google.maps){
 				me.initMap(containerid,opt);
@@ -24,7 +24,7 @@ define(["infobox"], function(InfoBox){
 				$.getScript('http://maps.google.cn/maps/api/js?libraries=geometry&sensor=false&key=AIzaSyDuVPF7CxcYsNQhLlwCbTMgThoUl0UQHhg&callback=googleMapCbFun');
 			}
 		},
-		initMap:function(containerid,opt){
+		initMap:function(containerid, opt){
 			var me = this,
 				lat = 39.92, lng = 116.46,
 				myOptions = {
